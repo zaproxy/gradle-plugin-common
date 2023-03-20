@@ -1,0 +1,15 @@
+* text=auto eol=lf
+
+*.gradle text
+*.gradle.kts text
+*.java text
+*.md text
+*.properties text encoding=utf-8
+*.yaml text
+*.yml text
+
+*.bat eol=crlf
+*.sh text
+gradlew text
+
+*.jar binary
