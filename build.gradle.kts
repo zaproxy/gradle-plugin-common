@@ -2,9 +2,9 @@ import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
     `kotlin-dsl`
-    id("com.gradle.plugin-publish") version "1.1.0"
-    id("com.diffplug.spotless") version "6.15.0"
-    id("net.ltgt.errorprone") version "3.0.1"
+    id("com.gradle.plugin-publish") version "1.2.0"
+    id("com.diffplug.spotless") version "6.20.0"
+    id("net.ltgt.errorprone") version "3.1.0"
 }
 
 repositories {
@@ -15,21 +15,27 @@ group = "org.zaproxy.gradle"
 version = "0.2.0-SNAPSHOT"
 
 val functionalTest by sourceSets.creating {
-    compileClasspath += sourceSets.main.get().output + configurations.testRuntimeClasspath
-    runtimeClasspath += output + compileClasspath
+    compileClasspath += sourceSets.main.get().output
+    runtimeClasspath += sourceSets.main.get().output
+}
+
+val functionalTestImplementation by configurations.getting {
+    extendsFrom(configurations.testImplementation.get())
+}
+
+val functionalTestRuntimeOnly by configurations.getting {
+    extendsFrom(configurations.testRuntimeOnly.get())
+    extendsFrom(configurations.compileOnly.get())
 }
 
 dependencies {
-    compileOnly("com.diffplug.spotless:spotless-plugin-gradle:6.15.0")
-    implementation("org.apache.commons:commons-configuration2:2.8.0")
-    "errorprone"("com.google.errorprone:error_prone_core:2.18.0")
+    compileOnly("com.diffplug.spotless:spotless-plugin-gradle:6.20.0")
+    implementation("org.apache.commons:commons-configuration2:2.9.0")
+    "errorprone"("com.google.errorprone:error_prone_core:2.20.0")
     testImplementation("org.hamcrest:hamcrest-core:2.2")
-    val jupiterVersion = "5.9.2"
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:$jupiterVersion")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
-    "functionalTestImplementation"("org.apiguardian:apiguardian-api:1.1.2")
-    "functionalTestImplementation"("com.diffplug.spotless:spotless-plugin-gradle:6.15.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    functionalTestImplementation("org.apiguardian:apiguardian-api:1.1.2")
 }
 
 java {
@@ -83,7 +89,7 @@ tasks.check {
 spotless {
     java {
         licenseHeaderFile("gradle/spotless/license.java")
-        googleJavaFormat("1.7").aosp()
+        googleJavaFormat("1.17.0").aosp()
     }
 
     kotlin {
