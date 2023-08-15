@@ -20,12 +20,17 @@
 package org.zaproxy.gradle.common;
 
 import com.diffplug.gradle.spotless.SpotlessExtension;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.ProjectConfigurationException;
+import org.gradle.api.plugins.JavaPlugin;
 import org.zaproxy.gradle.common.spotless.FormatPropertiesStep;
 
 /** A plugin for common ZAP build-related configs and tasks. */
 public class CommonPlugin implements Plugin<Project> {
+
     @Override
     public void apply(Project target) {
         var spotlessExtension = target.getExtensions().findByType(SpotlessExtension.class);
@@ -40,6 +45,25 @@ public class CommonPlugin implements Plugin<Project> {
                                 "**/gradle-wrapper.properties");
                         format.addStep(FormatPropertiesStep.create());
                     });
+        }
+
+        target.getPlugins().withType(JavaPlugin.class, jp -> configureJavaPlugin(target));
+    }
+
+    private static void configureJavaPlugin(Project target) {
+        target.getExtensions()
+                .configure(SpotlessExtension.class, CommonPlugin::configureSpotlessJava);
+    }
+
+    private static void configureSpotlessJava(SpotlessExtension ext) {
+        ext.java(j -> j.licenseHeader(readLicense()));
+    }
+
+    private static String readLicense() {
+        try (var is = CommonPlugin.class.getResourceAsStream("spotless/license.java")) {
+            return new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new ProjectConfigurationException("Failed to read the license file.", e);
         }
     }
 }
