@@ -30,6 +30,7 @@ import static org.hamcrest.Matchers.startsWith;
 import java.nio.file.Path;
 import org.gradle.testkit.runner.BuildResult;
 import org.junit.jupiter.api.Test;
+import org.zaproxy.gradle.common.FunctionalTest;
 
 class JavaLicenseFunctionalTest extends FunctionalTest {
 

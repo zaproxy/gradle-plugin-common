@@ -22,14 +22,18 @@ package org.zaproxy.gradle.common;
 import com.diffplug.gradle.spotless.SpotlessExtension;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.ProjectConfigurationException;
 import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.tasks.compile.JavaCompile;
 import org.zaproxy.gradle.common.spotless.FormatPropertiesStep;
 
 /** A plugin for common ZAP build-related configs and tasks. */
 public class CommonPlugin implements Plugin<Project> {
+
+    private static final List<String> JAVA_COMPILER_ARGS = List.of("-Xlint:all", "-Werror");
 
     @Override
     public void apply(Project target) {
@@ -53,6 +57,16 @@ public class CommonPlugin implements Plugin<Project> {
     private static void configureJavaPlugin(Project target) {
         target.getExtensions()
                 .configure(SpotlessExtension.class, CommonPlugin::configureSpotlessJava);
+
+        target.getTasks()
+                .withType(JavaCompile.class)
+                .configureEach(CommonPlugin::configureJavaCompile);
+    }
+
+    private static void configureJavaCompile(JavaCompile task) {
+        var options = task.getOptions();
+        options.setEncoding(StandardCharsets.UTF_8.name());
+        options.setCompilerArgs(JAVA_COMPILER_ARGS);
     }
 
     private static void configureSpotlessJava(SpotlessExtension ext) {
