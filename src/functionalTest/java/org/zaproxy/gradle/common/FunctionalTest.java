@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.zaproxy.gradle.common.spotless;
+package org.zaproxy.gradle.common;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -34,7 +34,7 @@ import org.gradle.testkit.runner.GradleRunner;
 import org.gradle.testkit.runner.TaskOutcome;
 import org.junit.jupiter.api.io.TempDir;
 
-abstract class FunctionalTest {
+public abstract class FunctionalTest {
 
     @TempDir protected Path projectDir;
 
@@ -72,8 +72,17 @@ abstract class FunctionalTest {
     }
 
     protected static void assertTaskSuccess(BuildResult result, String taskName) {
+        assertTaskOutcome(result, taskName, TaskOutcome.SUCCESS);
+    }
+
+    private static void assertTaskOutcome(
+            BuildResult result, String taskName, TaskOutcome outcome) {
         BuildTask task = result.task(taskName);
         assertThat(task, is(notNullValue()));
-        assertThat(task.getOutcome(), is(TaskOutcome.SUCCESS));
+        assertThat(task.getOutcome(), is(outcome));
+    }
+
+    protected static void assertTaskFailed(BuildResult result, String taskName) {
+        assertTaskOutcome(result, taskName, TaskOutcome.FAILED);
     }
 }
