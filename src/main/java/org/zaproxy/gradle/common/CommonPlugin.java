@@ -35,6 +35,8 @@ public class CommonPlugin implements Plugin<Project> {
 
     private static final List<String> JAVA_COMPILER_ARGS = List.of("-Xlint:all", "-Werror");
 
+    private static final String GJF_VERSION = "1.17.0";
+
     @Override
     public void apply(Project target) {
         var spotlessExtension = target.getExtensions().findByType(SpotlessExtension.class);
@@ -70,7 +72,11 @@ public class CommonPlugin implements Plugin<Project> {
     }
 
     private static void configureSpotlessJava(SpotlessExtension ext) {
-        ext.java(j -> j.licenseHeader(readLicense()));
+        ext.java(
+                j -> {
+                    j.licenseHeader(readLicense());
+                    j.googleJavaFormat(GJF_VERSION).aosp();
+                });
     }
 
     private static String readLicense() {

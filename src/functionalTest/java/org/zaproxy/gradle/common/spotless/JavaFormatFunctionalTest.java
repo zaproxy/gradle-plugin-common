@@ -20,17 +20,15 @@
 package org.zaproxy.gradle.common.spotless;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.startsWith;
 
 import org.gradle.testkit.runner.BuildResult;
 import org.junit.jupiter.api.Test;
 import org.zaproxy.gradle.common.JavaFunctionalTest;
 
-class JavaLicenseFunctionalTest extends JavaFunctionalTest {
+class JavaFormatFunctionalTest extends JavaFunctionalTest {
 
     private static final String SPOTLESS_APPLY = ":spotlessApply";
 
@@ -47,7 +45,7 @@ class JavaLicenseFunctionalTest extends JavaFunctionalTest {
     }
 
     @Test
-    void shouldFormatWithJavaLicense() throws Exception {
+    void shouldFormatWithGjf() throws Exception {
         // Given
         buildFileWithJavaPlugin();
         var javaFile = createJavaFile();
@@ -55,12 +53,6 @@ class JavaLicenseFunctionalTest extends JavaFunctionalTest {
         BuildResult result = build(SPOTLESS_APPLY);
         // Then
         assertTaskSuccess(result, SPOTLESS_APPLY);
-        assertThat(
-                contentOf(javaFile),
-                allOf(
-                        startsWith("/*"),
-                        containsString("Zed Attack Proxy (ZAP) and its related class files."),
-                        containsString("*/"),
-                        containsString(CONTENT_JAVA_FILE)));
+        assertThat(contentOf(javaFile), endsWith(CONTENT_JAVA_FILE + "\n"));
     }
 }
