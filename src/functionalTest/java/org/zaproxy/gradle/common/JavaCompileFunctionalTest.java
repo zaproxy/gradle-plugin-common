@@ -26,16 +26,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.nio.file.Path;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.UnexpectedBuildFailure;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class JavaCompileFunctionalTest extends FunctionalTest {
+class JavaCompileFunctionalTest extends JavaFunctionalTest {
 
     private static final String COMPILE_JAVA = ":compileJava";
+
+    @BeforeEach
+    void setUp() throws Exception {
+        buildFileWithJavaPlugin();
+    }
 
     @Test
     void shouldCompileWithUnicodeChars() throws Exception {
         // Given
-        buildFileWithJavaPlugin();
         javaClassWith("        String str = \"❌🎉️\"; System.out.println(str);\n");
         // When
         BuildResult result = build(COMPILE_JAVA);
@@ -43,19 +48,9 @@ class JavaCompileFunctionalTest extends FunctionalTest {
         assertTaskSuccess(result, COMPILE_JAVA);
     }
 
-    private void buildFileWithJavaPlugin() throws Exception {
-        buildFile(
-                "plugins {\n"
-                        + "    `java-library`\n"
-                        + "    id(\"com.diffplug.spotless\")\n"
-                        + "    id(\"org.zaproxy.common\")\n"
-                        + "}");
-    }
-
     @Test
     void shouldFailWithWarningsAsErrors() throws Exception {
         // Given
-        buildFileWithJavaPlugin();
         javaClassWith(
                 "        java.util.List l = new java.util.ArrayList<Number>();\n"
                         + "        java.util.List<String> ls = l;\n");
