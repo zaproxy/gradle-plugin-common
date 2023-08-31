@@ -112,6 +112,13 @@ gradlePlugin {
             description = "A Gradle plugin for common ZAP build-related configs and tasks."
             tags.set(listOf("zap", "zaproxy"))
         }
+        create("zapCommonSettings") {
+            id = "org.zaproxy.common.settings"
+            implementationClass = "org.zaproxy.gradle.common.CommonSettingsPlugin"
+            displayName = "Plugin for common ZAP build-related settings"
+            description = "A Gradle plugin for common ZAP build-related settings."
+            tags.set(listOf("zap", "zaproxy"))
+        }
     }
     testSourceSets(functionalTest)
 }
