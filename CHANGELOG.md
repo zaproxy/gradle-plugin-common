@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Configure Spotless' Java extension with the ZAP license and Google Java Format (AOSP).
 - Configure the `JavaCompile` tasks to use UTF-8, enable all warnings, and handle warnings as errors.
+- Add `Settings` plugin that configures the `repositories` with `mavenCentral()`.
 
 ### Changed
 - Recommended minimum Gradle version is now 8.2.
