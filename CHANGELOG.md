@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `Settings` plugin that configures the `repositories` with `mavenCentral()`.
 
 ### Changed
-- Recommended minimum Gradle version is now 8.2.
+- Recommended minimum Gradle version is now 8.5.
 
 ## [0.1.0] - 2023-03-21
 ### Added
