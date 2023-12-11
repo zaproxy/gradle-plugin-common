@@ -33,7 +33,8 @@ import org.zaproxy.gradle.common.spotless.FormatPropertiesStep;
 /** A plugin for common ZAP build-related configs and tasks. */
 public class CommonPlugin implements Plugin<Project> {
 
-    private static final List<String> JAVA_COMPILER_ARGS = List.of("-Xlint:all", "-Werror");
+    private static final List<String> JAVA_COMPILER_ARGS =
+            List.of("-Xlint:all", "-Werror", "-parameters");
 
     private static final String GJF_VERSION = "1.17.0";
 
