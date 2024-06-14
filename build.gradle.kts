@@ -3,8 +3,8 @@ import net.ltgt.gradle.errorprone.errorprone
 plugins {
     `kotlin-dsl`
     id("com.gradle.plugin-publish") version "1.2.1"
-    id("com.diffplug.spotless") version "6.20.0"
-    id("net.ltgt.errorprone") version "3.1.0"
+    id("com.diffplug.spotless") version "6.25.0"
+    id("net.ltgt.errorprone") version "4.0.0"
 }
 
 repositories {
@@ -29,11 +29,11 @@ val functionalTestRuntimeOnly by configurations.getting {
 }
 
 dependencies {
-    compileOnly("com.diffplug.spotless:spotless-plugin-gradle:6.20.0")
-    implementation("org.apache.commons:commons-configuration2:2.9.0")
-    "errorprone"("com.google.errorprone:error_prone_core:2.23.0")
+    compileOnly("com.diffplug.spotless:spotless-plugin-gradle:6.25.0")
+    implementation("org.apache.commons:commons-configuration2:2.11.0")
+    "errorprone"("com.google.errorprone:error_prone_core:2.28.0")
     testImplementation("org.hamcrest:hamcrest-core:2.2")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     functionalTestImplementation("org.apiguardian:apiguardian-api:1.1.2")
 }
@@ -59,29 +59,31 @@ tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
 
-val functionalTestTask = tasks.register<Test>("functionalTest") {
-    description = "Runs the functional tests."
-    group = "verification"
-    testClassesDirs = functionalTest.output.classesDirs
-    classpath = functionalTest.runtimeClasspath
-    mustRunAfter(tasks.test)
-    dependsOn(createFunctionalTestClasspathManifest)
-}
-
-val createFunctionalTestClasspathManifest = tasks.register<Task>("createFunctionalTestClasspathManifest") {
-    description = "Creates a manifest file with the plugin classpath."
-    group = "build"
-    val outputDir = layout.buildDirectory.dir("resources/functionalTest")
-    inputs.files(functionalTest.runtimeClasspath)
-    outputs.dir(outputDir)
-    doLast {
-        val dir = outputDir.get().asFile
-        dir.mkdirs()
-        file("$dir/pluginClasspath.txt").writeText(
-            functionalTest.runtimeClasspath.joinToString("\n"),
-        )
+val functionalTestTask =
+    tasks.register<Test>("functionalTest") {
+        description = "Runs the functional tests."
+        group = "verification"
+        testClassesDirs = functionalTest.output.classesDirs
+        classpath = functionalTest.runtimeClasspath
+        mustRunAfter(tasks.test)
+        dependsOn(createFunctionalTestClasspathManifest)
     }
-}
+
+val createFunctionalTestClasspathManifest =
+    tasks.register<Task>("createFunctionalTestClasspathManifest") {
+        description = "Creates a manifest file with the plugin classpath."
+        group = "build"
+        val outputDir = layout.buildDirectory.dir("resources/functionalTest")
+        inputs.files(functionalTest.runtimeClasspath)
+        outputs.dir(outputDir)
+        doLast {
+            val dir = outputDir.get().asFile
+            dir.mkdirs()
+            file("$dir/pluginClasspath.txt").writeText(
+                functionalTest.runtimeClasspath.joinToString("\n"),
+            )
+        }
+    }
 
 tasks.check {
     dependsOn(functionalTestTask)

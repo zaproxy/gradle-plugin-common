@@ -6,7 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Recommended minimum Gradle version is now 8.8.
 - Configure the `JavaCompile` tasks with the `-parameters` argument.
+- Update dependencies.
 
 ## [0.2.0] - 2023-11-30
 ### Added
