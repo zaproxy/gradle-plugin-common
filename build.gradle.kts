@@ -2,9 +2,9 @@ import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
     `kotlin-dsl`
-    id("com.gradle.plugin-publish") version "1.2.1"
+    id("com.gradle.plugin-publish") version "1.3.1"
     id("com.diffplug.spotless") version "6.25.0"
-    id("net.ltgt.errorprone") version "4.0.0"
+    id("net.ltgt.errorprone") version "4.1.0"
 }
 
 repositories {
@@ -31,15 +31,15 @@ val functionalTestRuntimeOnly by configurations.getting {
 dependencies {
     compileOnly("com.diffplug.spotless:spotless-plugin-gradle:6.25.0")
     implementation("org.apache.commons:commons-configuration2:2.11.0")
-    "errorprone"("com.google.errorprone:error_prone_core:2.28.0")
+    "errorprone"("com.google.errorprone:error_prone_core:2.36.0")
     testImplementation("org.hamcrest:hamcrest-core:2.2")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     functionalTestImplementation("org.apiguardian:apiguardian-api:1.1.2")
 }
 
 java {
-    val javaVersion = JavaVersion.VERSION_11
+    val javaVersion = JavaVersion.VERSION_17
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
 }
@@ -92,7 +92,7 @@ tasks.check {
 spotless {
     java {
         licenseHeaderFile("gradle/spotless/license.java")
-        googleJavaFormat("1.17.0").aosp()
+        googleJavaFormat("1.25.2").aosp()
     }
 
     kotlin {
