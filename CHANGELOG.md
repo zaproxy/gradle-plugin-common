@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Recommended minimum Gradle version is now 8.12.
+- The minimum Java version is 17.
+- Update dependencies.
+- Update Google Java Format to 1.25.2, might lead to some code formatting changes.
 
 ## [0.3.0] - 2024-06-14
 ### Changed
