@@ -12,7 +12,7 @@ repositories {
 }
 
 group = "org.zaproxy.gradle"
-version = "0.5.0"
+version = "0.6.0-SNAPSHOT"
 
 val functionalTest by sourceSets.creating {
     compileClasspath += sourceSets.main.get().output
