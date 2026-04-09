@@ -19,12 +19,9 @@
  */
 package org.zaproxy.gradle.common;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Collectors;
@@ -37,10 +34,6 @@ import org.junit.jupiter.api.io.TempDir;
 public abstract class FunctionalTest {
 
     @TempDir protected Path projectDir;
-
-    protected static String contentOf(Path file) throws IOException {
-        return Files.readString(file);
-    }
 
     protected static void createFile(String content, Path file) throws Exception {
         Files.createDirectories(file.getParent());
@@ -77,9 +70,7 @@ public abstract class FunctionalTest {
 
     private static void assertTaskOutcome(
             BuildResult result, String taskName, TaskOutcome outcome) {
-        BuildTask task = result.task(taskName);
-        assertThat(task, is(notNullValue()));
-        assertThat(task.getOutcome(), is(outcome));
+        assertThat(result.task(taskName)).extracting(BuildTask::getOutcome).isEqualTo(outcome);
     }
 
     protected static void assertTaskFailed(BuildResult result, String taskName) {

@@ -19,10 +19,7 @@
  */
 package org.zaproxy.gradle.common.spotless;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.gradle.testkit.runner.BuildResult;
 import org.junit.jupiter.api.Test;
@@ -41,7 +38,7 @@ class JavaFormatFunctionalTest extends JavaFunctionalTest {
         BuildResult result = build(SPOTLESS_APPLY);
         // Then
         assertTaskSuccess(result, SPOTLESS_APPLY);
-        assertThat(contentOf(javaFile), is(equalTo(CONTENT_JAVA_FILE)));
+        assertThat(javaFile).content().isEqualTo(CONTENT_JAVA_FILE);
     }
 
     @Test
@@ -53,6 +50,6 @@ class JavaFormatFunctionalTest extends JavaFunctionalTest {
         BuildResult result = build(SPOTLESS_APPLY);
         // Then
         assertTaskSuccess(result, SPOTLESS_APPLY);
-        assertThat(contentOf(javaFile), endsWith(CONTENT_JAVA_FILE + "\n"));
+        assertThat(javaFile).content().endsWith(CONTENT_JAVA_FILE + "\n");
     }
 }
