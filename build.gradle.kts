@@ -32,7 +32,7 @@ dependencies {
     compileOnly("com.diffplug.spotless:spotless-plugin-gradle:6.25.0")
     implementation("org.apache.commons:commons-configuration2:2.11.0")
     "errorprone"("com.google.errorprone:error_prone_core:2.36.0")
-    testImplementation("org.hamcrest:hamcrest-core:2.2")
+    testImplementation("org.assertj:assertj-core:3.27.7")
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     functionalTestImplementation("org.apiguardian:apiguardian-api:1.1.2")

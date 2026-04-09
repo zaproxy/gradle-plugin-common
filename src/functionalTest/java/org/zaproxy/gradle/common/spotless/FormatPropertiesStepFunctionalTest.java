@@ -19,9 +19,7 @@
  */
 package org.zaproxy.gradle.common.spotless;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -52,37 +50,36 @@ class FormatPropertiesStepFunctionalTest extends FunctionalTest {
         BuildResult result = build(spotlessPropertiesApplyTaskName);
         // Then
         assertTaskSuccess(result, spotlessPropertiesApplyTaskName);
-        assertThat(
-                contentOf(copiedUnformattedPropertiesPath),
-                is(equalTo(contentOf(formattedPropertiesPath))));
+        assertThat(copiedUnformattedPropertiesPath).hasSameBinaryContentAs(formattedPropertiesPath);
 
         var properties = new Properties();
         properties.load(
                 new InputStreamReader(
                         Files.newInputStream(copiedUnformattedPropertiesPath),
                         StandardCharsets.UTF_8));
-        assertThat(properties.size(), is(22));
-        assertThat(properties.getProperty("commas"), is("value1, value2, value3"));
-        assertThat(properties.getProperty("spaces.after.separator"), is("value"));
-        assertThat(properties.getProperty("no.value"), is(""));
-        assertThat(properties.getProperty("colon.separator"), is("value"));
-        assertThat(properties.getProperty("unicode.unencoded"), is("नमस्ते"));
-        assertThat(properties.getProperty("spaces in key"), is("value"));
-        assertThat(properties.getProperty("quoted.args"), is("value \"{0}\""));
-        assertThat(properties.getProperty("single.quotes"), is("'value'"));
-        assertThat(properties.getProperty("trailing.whitespace"), is("value    "));
-        assertThat(properties.getProperty("unicode.whitespace"), is(" hello world "));
-        assertThat(properties.getProperty("quotes"), is("\"value\""));
-        assertThat(properties.getProperty("args"), is("value {0}"));
-        assertThat(properties.getProperty("single.quoted.args"), is("value ''{0}''"));
-        assertThat(properties.getProperty("escape.chars"), is("\nvalue1\nvalue2\tvalue3\t"));
-        assertThat(properties.getProperty("spaces.before.separator"), is("value"));
-        assertThat(properties.getProperty("no.spaces.separator"), is("value"));
-        assertThat(properties.getProperty("no.value.with.separator"), is(""));
-        assertThat(properties.getProperty("equals"), is("value=1"));
-        assertThat(properties.getProperty("unicode.encoded"), is("नमस्ते"));
-        assertThat(properties.getProperty("space.separator"), is("value"));
-        assertThat(properties.getProperty("multiline.value"), is("value1 value2 value3"));
-        assertThat(properties.getProperty("leading.escaped.space"), is(" value"));
+        assertThat(properties)
+                .hasSize(22)
+                .containsEntry("commas", "value1, value2, value3")
+                .containsEntry("spaces.after.separator", "value")
+                .containsEntry("no.value", "")
+                .containsEntry("colon.separator", "value")
+                .containsEntry("unicode.unencoded", "नमस्ते")
+                .containsEntry("spaces in key", "value")
+                .containsEntry("quoted.args", "value \"{0}\"")
+                .containsEntry("single.quotes", "'value'")
+                .containsEntry("trailing.whitespace", "value    ")
+                .containsEntry("unicode.whitespace", " hello world ")
+                .containsEntry("quotes", "\"value\"")
+                .containsEntry("args", "value {0}")
+                .containsEntry("single.quoted.args", "value ''{0}''")
+                .containsEntry("escape.chars", "\nvalue1\nvalue2\tvalue3\t")
+                .containsEntry("spaces.before.separator", "value")
+                .containsEntry("no.spaces.separator", "value")
+                .containsEntry("no.value.with.separator", "")
+                .containsEntry("equals", "value=1")
+                .containsEntry("unicode.encoded", "नमस्ते")
+                .containsEntry("space.separator", "value")
+                .containsEntry("multiline.value", "value1 value2 value3")
+                .containsEntry("leading.escaped.space", " value");
     }
 }

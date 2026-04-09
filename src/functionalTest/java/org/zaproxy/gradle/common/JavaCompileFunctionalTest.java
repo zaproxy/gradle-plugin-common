@@ -19,8 +19,7 @@
  */
 package org.zaproxy.gradle.common;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Path;
@@ -59,8 +58,7 @@ class JavaCompileFunctionalTest extends JavaFunctionalTest {
                 assertThrows(UnexpectedBuildFailure.class, () -> build(COMPILE_JAVA));
         BuildResult result = ex.getBuildResult();
         assertTaskFailed(result, COMPILE_JAVA);
-        assertThat(
-                result.getOutput(), containsString("error: warnings found and -Werror specified"));
+        assertThat(result.getOutput()).contains("error: warnings found and -Werror specified");
     }
 
     private Path javaClassWith(String body) throws Exception {
