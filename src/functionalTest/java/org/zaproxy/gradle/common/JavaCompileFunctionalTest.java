@@ -51,8 +51,10 @@ class JavaCompileFunctionalTest extends JavaFunctionalTest {
     void shouldFailWithWarningsAsErrors() throws Exception {
         // Given
         javaClassWith(
-                "        java.util.List l = new java.util.ArrayList<Number>();\n"
-                        + "        java.util.List<String> ls = l;\n");
+                """
+                        java.util.List l = new java.util.ArrayList<Number>();
+                        java.util.List<String> ls = l;
+                """);
         // When / Then
         UnexpectedBuildFailure ex =
                 assertThrows(UnexpectedBuildFailure.class, () -> build(COMPILE_JAVA));
@@ -64,13 +66,15 @@ class JavaCompileFunctionalTest extends JavaFunctionalTest {
     private Path javaClassWith(String body) throws Exception {
         var javaFile = projectDir.resolve("src/main/java/org/zaproxy/example/Example.java");
         createFile(
-                "package org.zaproxy.example;\n"
-                        + "\n"
-                        + "public class Example {\n"
-                        + "    public static void main(String[] args) {\n"
-                        + body
-                        + "    }\n"
-                        + "}",
+                """
+                package org.zaproxy.example;
+
+                public class Example {
+                    public static void main(String[] args) {
+                        %s
+                    }
+                }"""
+                        .formatted(body),
                 javaFile);
         return javaFile;
     }

@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
 
-public class FormatPropertiesStepTest {
+class FormatPropertiesStepTest {
     @Test
     void shouldTrimSpacesBeforeSeparator() throws Exception {
         assertThat(FormatPropertiesStep.format("spaces.before.separator     = value\n"))
