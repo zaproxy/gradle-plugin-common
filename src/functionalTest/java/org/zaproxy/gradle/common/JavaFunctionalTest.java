@@ -27,23 +27,25 @@ public abstract class JavaFunctionalTest extends FunctionalTest {
 
     protected void buildFileWithoutJavaPlugin() throws Exception {
         buildFile(
-                "plugins {\n"
-                        + "    id(\"com.diffplug.spotless\")\n"
-                        + "    id(\"org.zaproxy.common\")\n"
-                        + "}");
+                """
+                plugins {
+                    id("com.diffplug.spotless")
+                    id("org.zaproxy.common")
+                }""");
     }
 
     protected void buildFileWithJavaPlugin() throws Exception {
         buildFile(
-                "plugins {\n"
-                        + "    `java-library`\n"
-                        + "    id(\"com.diffplug.spotless\")\n"
-                        + "    id(\"org.zaproxy.common\")\n"
-                        + "}\n"
-                        + "\n"
-                        + "repositories {\n"
-                        + "    mavenCentral()\n"
-                        + "}");
+                """
+                plugins {
+                    `java-library`
+                    id("com.diffplug.spotless")
+                    id("org.zaproxy.common")
+                }
+
+                repositories {
+                    mavenCentral()
+                }""");
     }
 
     protected Path createJavaFile() throws Exception {
