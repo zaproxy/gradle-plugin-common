@@ -1,0 +1,19 @@
+[versions]
+errorprone = "4.1.0"
+googleJavaFormat = "1.25.2"
+gradle-publish = "1.3.1"
+spotless = "6.25.0"
+
+[libraries]
+apiguardian = "org.apiguardian:apiguardian-api:1.1.2"
+assertj-core = "org.assertj:assertj-core:3.27.7"
+commons-configuration2 = "org.apache.commons:commons-configuration2:2.11.0"
+errorprone-core = "com.google.errorprone:error_prone_core:2.36.0"
+junit-jupiter = "org.junit.jupiter:junit-jupiter:5.11.4"
+junit-platformLauncher = { module = "org.junit.platform:junit-platform-launcher" }
+spotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
+
+[plugins]
+errorprone = { id = "net.ltgt.errorprone", version.ref = "errorprone" }
+gradle-publish = { id = "com.gradle.plugin-publish", version.ref = "gradle-publish" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
