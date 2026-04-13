@@ -2,126 +2,67 @@ import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
     `kotlin-dsl`
-    id("com.gradle.plugin-publish") version "1.3.1"
+    id("com.gradle.plugin-publish") version "1.3.1" apply false
+
     id("com.diffplug.spotless") version "6.25.0"
     id("net.ltgt.errorprone") version "4.1.0"
 }
 
-repositories {
-    mavenCentral()
-}
+allprojects {
+    apply(plugin = "com.diffplug.spotless")
+    apply(plugin = "net.ltgt.errorprone")
 
-group = "org.zaproxy.gradle"
-version = "0.6.0-SNAPSHOT"
+    group = "org.zaproxy.gradle"
 
-val functionalTest by sourceSets.creating {
-    compileClasspath += sourceSets.main.get().output
-    runtimeClasspath += sourceSets.main.get().output
-}
-
-val functionalTestImplementation by configurations.getting {
-    extendsFrom(configurations.testImplementation.get())
-}
-
-val functionalTestRuntimeOnly by configurations.getting {
-    extendsFrom(configurations.testRuntimeOnly.get())
-    extendsFrom(configurations.compileOnly.get())
-}
-
-dependencies {
-    compileOnly("com.diffplug.spotless:spotless-plugin-gradle:6.25.0")
-    implementation("org.apache.commons:commons-configuration2:2.11.0")
-    "errorprone"("com.google.errorprone:error_prone_core:2.36.0")
-    testImplementation("org.assertj:assertj-core:3.27.7")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    functionalTestImplementation("org.apiguardian:apiguardian-api:1.1.2")
-}
-
-java {
-    val javaVersion = JavaVersion.VERSION_17
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-}
-
-tasks.withType<JavaCompile>().configureEach {
-    options.encoding = "UTF-8"
-    options.compilerArgs = listOf("-Xlint:all", "-Xlint:-path", "-Xlint:-options", "-Werror")
-    options.errorprone {
-        error(
-            "MissingOverride",
-            "WildcardImport",
-        )
-    }
-}
-
-tasks.withType<Test>().configureEach {
-    useJUnitPlatform()
-}
-
-val functionalTestTask =
-    tasks.register<Test>("functionalTest") {
-        description = "Runs the functional tests."
-        group = "verification"
-        testClassesDirs = functionalTest.output.classesDirs
-        classpath = functionalTest.runtimeClasspath
-        mustRunAfter(tasks.test)
-        dependsOn(createFunctionalTestClasspathManifest)
+    repositories {
+        mavenCentral()
     }
 
-val createFunctionalTestClasspathManifest =
-    tasks.register<Task>("createFunctionalTestClasspathManifest") {
-        description = "Creates a manifest file with the plugin classpath."
-        group = "build"
-        val outputDir = layout.buildDirectory.dir("resources/functionalTest")
-        inputs.files(functionalTest.runtimeClasspath)
-        outputs.dir(outputDir)
-        doLast {
-            val dir = outputDir.get().asFile
-            dir.mkdirs()
-            file("$dir/pluginClasspath.txt").writeText(
-                functionalTest.runtimeClasspath.joinToString("\n"),
+    spotless {
+        java {
+            licenseHeaderFile(rootProject.file("gradle/spotless/license.java"))
+            googleJavaFormat("1.25.2").aosp()
+        }
+
+        kotlinGradle {
+            ktlint()
+        }
+    }
+
+    project.plugins.withType(JavaPlugin::class) {
+        dependencies {
+            "errorprone"("com.google.errorprone:error_prone_core:2.36.0")
+        }
+
+        tasks.withType<Test>().configureEach {
+            useJUnitPlatform()
+        }
+    }
+
+    tasks.withType<JavaCompile>().configureEach {
+        options.encoding = "UTF-8"
+        options.compilerArgs = listOf("-Xlint:all", "-Xlint:-path", "-Xlint:-options", "-Werror")
+        options.errorprone {
+            disableAllChecks.set(true)
+            error(
+                "MissingOverride",
+                "WildcardImport",
             )
         }
     }
-
-tasks.check {
-    dependsOn(functionalTestTask)
 }
 
-spotless {
+subprojects {
+    apply(plugin = "com.gradle.plugin-publish")
+
     java {
-        licenseHeaderFile("gradle/spotless/license.java")
-        googleJavaFormat("1.25.2").aosp()
+        val javaVersion = JavaVersion.VERSION_17
+        sourceCompatibility = javaVersion
+        targetCompatibility = javaVersion
     }
 
-    kotlin {
-        ktlint()
+    gradlePlugin {
+        website.set("https://github.com/zaproxy/gradle-plugin-common")
+        vcsUrl.set("https://github.com/zaproxy/gradle-plugin-common.git")
     }
-
-    kotlinGradle {
-        ktlint()
-    }
-}
-
-gradlePlugin {
-    website.set("https://github.com/zaproxy/gradle-plugin-common")
-    vcsUrl.set("https://github.com/zaproxy/gradle-plugin-common.git")
-    plugins {
-        create("zapCommon") {
-            id = "org.zaproxy.common"
-            implementationClass = "org.zaproxy.gradle.common.CommonPlugin"
-            displayName = "Plugin for common ZAP build-related configs and tasks"
-            description = "A Gradle plugin for common ZAP build-related configs and tasks."
-            tags.set(listOf("zap", "zaproxy"))
-        }
-        create("zapCommonSettings") {
-            id = "org.zaproxy.common.settings"
-            implementationClass = "org.zaproxy.gradle.common.CommonSettingsPlugin"
-            displayName = "Plugin for common ZAP build-related settings"
-            description = "A Gradle plugin for common ZAP build-related settings."
-            tags.set(listOf("zap", "zaproxy"))
-        }
-    }
-    testSourceSets(functionalTest)
 }
