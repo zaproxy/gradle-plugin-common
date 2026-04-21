@@ -13,12 +13,12 @@ val functionalTestRuntimeOnly by configurations.getting {
 }
 
 dependencies {
-    compileOnly("com.diffplug.spotless:spotless-plugin-gradle:6.25.0")
-    implementation("org.apache.commons:commons-configuration2:2.13.0")
-    testImplementation("org.assertj:assertj-core:3.27.7")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    functionalTestImplementation("org.apiguardian:apiguardian-api:1.1.2")
+    compileOnly(libs.spotless.plugin)
+    implementation(libs.commons.configuration2)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platformLauncher)
+    functionalTestImplementation(libs.apiguardian)
 }
 
 val functionalTestTask =

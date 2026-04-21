@@ -2,10 +2,10 @@ import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
     `kotlin-dsl`
-    id("com.gradle.plugin-publish") version "1.3.1" apply false
+    alias(libs.plugins.gradle.publish) apply false
 
-    id("com.diffplug.spotless") version "6.25.0"
-    id("net.ltgt.errorprone") version "4.1.0"
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.errorprone)
 }
 
 allprojects {
@@ -21,7 +21,7 @@ allprojects {
     spotless {
         java {
             licenseHeaderFile(rootProject.file("gradle/spotless/license.java"))
-            googleJavaFormat("1.25.2").aosp()
+            googleJavaFormat(libs.versions.googleJavaFormat.get()).aosp()
         }
 
         kotlinGradle {
@@ -31,7 +31,7 @@ allprojects {
 
     project.plugins.withType(JavaPlugin::class) {
         dependencies {
-            "errorprone"("com.google.errorprone:error_prone_core:2.36.0")
+            "errorprone"(rootProject.libs.errorprone.core)
         }
 
         tasks.withType<Test>().configureEach {
