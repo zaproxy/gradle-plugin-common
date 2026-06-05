@@ -1,3 +1,5 @@
+import org.gradle.plugin.devel.tasks.PluginUnderTestMetadata
+
 val functionalTest by sourceSets.creating {
     compileClasspath += sourceSets.main.get().output
     runtimeClasspath += sourceSets.main.get().output
@@ -9,7 +11,6 @@ val functionalTestImplementation by configurations.getting {
 
 val functionalTestRuntimeOnly by configurations.getting {
     extendsFrom(configurations.testRuntimeOnly.get())
-    extendsFrom(configurations.compileOnly.get())
 }
 
 dependencies {
@@ -28,24 +29,16 @@ val functionalTestTask =
         testClassesDirs = functionalTest.output.classesDirs
         classpath = functionalTest.runtimeClasspath
         mustRunAfter(tasks.test)
-        dependsOn(createFunctionalTestClasspathManifest)
     }
 
-val createFunctionalTestClasspathManifest =
-    tasks.register<Task>("createFunctionalTestClasspathManifest") {
-        description = "Creates a manifest file with the plugin classpath."
-        group = "build"
-        val outputDir = layout.buildDirectory.dir("resources/functionalTest")
-        inputs.files(functionalTest.runtimeClasspath)
-        outputs.dir(outputDir)
-        doLast {
-            val dir = outputDir.get().asFile
-            dir.mkdirs()
-            file("$dir/pluginClasspath.txt").writeText(
-                functionalTest.runtimeClasspath.joinToString("\n"),
-            )
-        }
-    }
+// Provide Spotless to functional tests.
+val functionalTestCompileOnlyRuntime by configurations.creating {
+    extendsFrom(configurations.compileOnly.get())
+}
+
+tasks.named<PluginUnderTestMetadata>("pluginUnderTestMetadata") {
+    pluginClasspath.from(functionalTestCompileOnlyRuntime)
+}
 
 tasks.check {
     dependsOn(functionalTestTask)

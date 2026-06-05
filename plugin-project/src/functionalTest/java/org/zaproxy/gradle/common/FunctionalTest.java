@@ -21,10 +21,8 @@ package org.zaproxy.gradle.common;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Collectors;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.BuildTask;
 import org.gradle.testkit.runner.GradleRunner;
@@ -44,23 +42,11 @@ public abstract class FunctionalTest {
         createFile(content, projectDir.resolve("build.gradle.kts"));
     }
 
-    protected static Iterable<? extends File> pluginClasspath() throws Exception {
-        Path pluginClasspath =
-                Path.of(
-                        FunctionalTest.class
-                                .getClassLoader()
-                                .getResource("pluginClasspath.txt")
-                                .toURI());
-        return Files.readAllLines(pluginClasspath).stream()
-                .map(File::new)
-                .collect(Collectors.toList());
-    }
-
     protected BuildResult build(String... arguments) throws Exception {
         return GradleRunner.create()
                 .withProjectDir(projectDir.toFile())
                 .withArguments(arguments)
-                .withPluginClasspath(pluginClasspath())
+                .withPluginClasspath()
                 .build();
     }
 
