@@ -23,6 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.BuildTask;
 import org.gradle.testkit.runner.GradleRunner;
@@ -43,9 +46,12 @@ public abstract class FunctionalTest {
     }
 
     protected BuildResult build(String... arguments) throws Exception {
+        List<String> args = new ArrayList<>();
+        args.add("--warning-mode=fail");
+        Stream.of(arguments).forEach(args::add);
         return GradleRunner.create()
                 .withProjectDir(projectDir.toFile())
-                .withArguments(arguments)
+                .withArguments(args)
                 .withPluginClasspath()
                 .build();
     }
