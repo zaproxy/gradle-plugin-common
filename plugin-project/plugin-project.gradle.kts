@@ -1,15 +1,17 @@
 import org.gradle.plugin.devel.tasks.PluginUnderTestMetadata
 
-val functionalTest by sourceSets.creating {
-    compileClasspath += sourceSets.main.get().output
-    runtimeClasspath += sourceSets.main.get().output
-}
+val functionalTest =
+    sourceSets.create("functionalTest") {
+        compileClasspath += sourceSets.main.get().output
+        runtimeClasspath += sourceSets.main.get().output
+    }
 
-val functionalTestImplementation by configurations.getting {
-    extendsFrom(configurations.testImplementation.get())
-}
+val functionalTestImplementation =
+    configurations.getByName("functionalTestImplementation") {
+        extendsFrom(configurations.testImplementation.get())
+    }
 
-val functionalTestRuntimeOnly by configurations.getting {
+configurations.getByName("functionalTestRuntimeOnly") {
     extendsFrom(configurations.testRuntimeOnly.get())
 }
 
@@ -32,9 +34,10 @@ val functionalTestTask =
     }
 
 // Provide Spotless to functional tests.
-val functionalTestCompileOnlyRuntime by configurations.creating {
-    extendsFrom(configurations.compileOnly.get())
-}
+val functionalTestCompileOnlyRuntime =
+    configurations.create("functionalTestCompileOnlyRuntime") {
+        extendsFrom(configurations.compileOnly.get())
+    }
 
 tasks.named<PluginUnderTestMetadata>("pluginUnderTestMetadata") {
     pluginClasspath.from(functionalTestCompileOnlyRuntime)

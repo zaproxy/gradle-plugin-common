@@ -6,9 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Recommended minimum Gradle version is now 9.6.
 - The minimum Java version is 21.
 - Update Spotless to 8.9.0.
 - Update Google Java Format to 1.35.0, might lead to some code formatting changes.
+- Update dependencies.
 
 ## [0.5.0] - 2025-02-27
 ### Changed
