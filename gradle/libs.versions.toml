@@ -2,7 +2,7 @@
 errorprone = "5.1.1"
 googleJavaFormat = "1.25.2"
 gradle-publish = "2.1.1"
-spotless = "8.10.1"
+spotless = "8.10.2"
 
 [libraries]
 apiguardian = "org.apiguardian:apiguardian-api:1.1.2"
