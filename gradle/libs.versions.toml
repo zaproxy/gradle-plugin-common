@@ -1,6 +1,6 @@
 [versions]
 errorprone = "5.1.1"
-googleJavaFormat = "1.25.2"
+googleJavaFormat = "1.36.0"
 gradle-publish = "2.2.1"
 spotless = "8.10.4"
 
