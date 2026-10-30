@@ -36,7 +36,7 @@ public class CommonPlugin implements Plugin<Project> {
     private static final List<String> JAVA_COMPILER_ARGS =
             List.of("-Xlint:all", "-Werror", "-parameters");
 
-    private static final String GJF_VERSION = "1.35.0";
+    private static final String GJF_VERSION = "1.36.0";
 
     @Override
     public void apply(Project target) {
